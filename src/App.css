@@ -1,0 +1,916 @@
+/* src/App.css */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* 바깥쪽(브라우저)에는 스크롤바가 생기지 않게 */
+body {
+  margin: 0;
+  overflow: auto;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  /* 여기부터 변경 */
+  height: 100%; /* 부모(#root)의 100% = 화면 전체 높이 */
+  display: flex;
+  flex-direction: column; /* 위에 헤더, 아래에 타임라인이 세로로 */
+}
+
+/* ---------- 상단 헤더 ---------- */
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.app-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.app-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+/* 제목 줄: 제목 + 다크모드 스위치 가로 정렬 */
+.app-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 다크모드 스위치 (제목 우측에 붙음) */
+.darkmode-switch {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #111827;
+}
+
+.darkmode-switch:hover {
+  background: #e5e7eb;
+}
+
+.current-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+}
+
+/* 현재 주행거리 오른쪽(초기화 + 탭) 묶음 */
+.current-right-controls {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+/* 초기화 버튼 */
+.reset-btn {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.75rem;
+  background: #f3f4f6;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #e5e7eb;
+}
+
+/* 기존: .current-row .tab-bar { margin-left: auto; } 는 이제 필요 없음 */
+.current-row .tab-bar {
+  margin-left: auto;
+}
+
+.current-row label {
+  white-space: nowrap;
+}
+
+#current-km {
+  width: 80px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.9rem;
+  text-align: right; /* 오른쪽 정렬 유지 */
+}
+
+.current-latest {
+  font-size: 0.85rem;
+  color: #4b5563;
+  white-space: nowrap;
+  margin-left: 0.2rem;
+}
+
+.current-row .tab-bar {
+  margin-left: auto;
+}
+
+/* 탭 버튼 바 */
+.tab-bar {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 0.15rem; /* 살짝 두껍게 */
+  background: #e5e7eb;
+  gap: 0.35rem; /* 버튼 사이 간격 */
+}
+
+/* 공통 탭 버튼 */
+.tab-btn {
+  border: 1px solid #cfd4dc; /* 항상 외곽선 표시 */
+  border-radius: 999px;
+  padding: 0.3rem 0.95rem;
+  font-size: 0.85rem;
+  background: #ffffff; /* 기본도 버튼처럼 흰색 */
+  cursor: pointer;
+  color: #4b5563;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* 기본 약한 그림자 */
+}
+
+/* hover 시 더 강조 */
+.tab-btn:hover {
+  background: #f9fafb;
+  border-color: #2563eb;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+/* active(선택된 탭) */
+.tab-btn.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.3);
+}
+
+/* ---------- 상단 소모품 요약 ---------- */
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+/* 제목(왼쪽) + 초기화 버튼(오른쪽) */
+.app-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.app-header-right {
+  margin-top: 0.4rem;
+}
+
+.top-list {
+  background: #f4f8fb;
+  padding: 0.3rem 0.3rem 0.25rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.top-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.top-list-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.top-list-add {
+  width: auto; /* 텍스트 길이에 맞추기 */
+  min-width: 48px;
+  height: 24px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  white-space: nowrap; /* 줄바꿈 금지 */
+}
+
+.top-list-add:hover {
+  background: #1d4ed8;
+}
+
+.top-list-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.25rem;
+}
+
+.top-list-row {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.05rem;
+  cursor: pointer;
+  text-align: left;
+  min-height: 3rem;
+  position: relative;
+
+  /* 🔹 부드러운 애니메이션 (주간/야간 공통) */
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    background-color 0.18s ease-out,
+    border-color 0.18s ease-out;
+}
+
+/* ☀️ 주간 모드에서의 hover */
+.top-list-row:hover {
+  border-color: #2563eb;                /* 파란색 강조 */
+  background: #e5efff;                  /* 약간 푸른 톤의 밝은 배경 */
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.top-list-name {
+  font-weight: 600;
+}
+
+.top-list-text {
+  color: #4b5563;
+}
+
+.top-list-footer {
+  display: flex;
+  align-items: center;
+  margin-top: 0.1rem;
+}
+
+.top-list-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 5px;
+}
+
+.icon-btn {
+  width: 26px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #e5e7eb;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.icon-btn:hover {
+  background: #d1d5db;
+}
+
+/* 타임라인 컨테이너 */
+.timeline-container {
+  margin-top: 0.5rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 0.5rem 0.7rem 0.7rem;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+/* 상단 전용 가로 스크롤 바(항상 보이게) – 상단/하단 사이에 위치 */
+.timeline-scrollbar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  scrollbar-gutter: stable both-edges;
+}
+
+.timeline-scrollbar-inner {
+  height: 1px; /* 내용 없음, 가로 길이만 맞추는 더미 */
+}
+
+/* 세로 스크롤 영역 */
+.timeline-wrapper {
+  margin-top: 0.4rem;
+  border-radius: 10px;
+  background: #f9fafb;
+  overflow: auto; /* x, y 모두 스크롤 */
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 550px);
+}
+
+/* 타임라인 메인 레이아웃 */
+
+.timeline-main {
+  display: flex;
+  align-items: stretch;
+  gap: 0.7rem;
+  position: relative;
+}
+
+/* 왼쪽 세로 축 */
+.axis {
+  position: sticky; /* 가로 스크롤 시 항상 왼쪽에 붙어 있게 */
+  left: 0;
+  z-index: 2;
+  width: 90px;
+  background: #f9fafb; /* 뒤에 카드가 지나갈 때 가려주도록 */
+}
+
+.axis-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #0f172a;
+  transform: translateX(-50%);
+}
+
+.axis-tick {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.axis-tick-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.axis-tick-line.thin {
+  width: 10px;
+  height: 1px;
+  background: #d1d5db;
+}
+
+.axis-tick-line.medium {
+  width: 16px;
+  height: 2px;
+  background: #9ca3af;
+}
+
+.axis-tick-line.strong {
+  width: 22px;
+  height: 3px;
+  background: #111827;
+}
+
+/* 눈금 숫자 */
+
+.axis-tick-label {
+  margin-left: 14px;
+  transform: translateY(-0.35rem);
+  position: relative;
+  z-index: 2;
+  background: #f9fafb;
+  padding: 0 3px;
+  border-radius: 4px;
+}
+
+/* 현재 주행거리 표시 */
+
+.axis-current {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.axis-current-line {
+  width: 24px;
+  height: 2px;
+  background: #dc2626;
+  transform: translateX(-50%);
+}
+
+.axis-current-label {
+  position: absolute;
+  left: 50%;
+  transform: translate(0%, -0.55rem); /* 숫자를 위로 */
+  font-size: 0.75rem;
+  color: #b91c1c;
+  font-weight: 600;
+  background: #fef2f2;
+  padding: 0 4px;
+  border-radius: 4px;
+  z-index: 3;
+}
+
+/* 오른쪽 소모품 박스 영역 */
+
+.events-column {
+  position: relative;
+  margin-left: 5px;
+  overflow: hidden; /* 내부 events-inner 만 가로 이동 */
+}
+
+/* 실제 가로로 이동하는 영역 */
+
+.events-inner {
+  position: relative;
+  will-change: transform;
+}
+
+/* 현재 km 전체 가로 빨간선 */
+
+.current-line-global {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(220, 38, 38, 0.7);
+  z-index: 1;
+}
+
+/* ---------- 연결선 ---------- */
+
+/* 과거 이력 실선 */
+
+.event-connector {
+  position: absolute;
+  width: 2px;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+/* 점선 “다음 권장 교체 시점”용 세로 연결선 본체 */
+.event-connector-future {
+  position: absolute;
+  width: 2px; /* 점선 두께 */
+  transform: translateX(-1px); /* xCenter 기준 중앙 보정 */
+  z-index: 0;
+  pointer-events: none; /* 클릭 방해 안 하도록 */
+  background: none; /* 실선 배경 제거 */
+}
+
+/* 색상은 style 의 --conn-color 사용 */
+.event-connector-future::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--conn-color, #64748b) 0px,
+    var(--conn-color, #64748b) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+/* ---------- 카드 (소모품 상자) ---------- */
+
+/* 기본 카드 (실제 교체 기록) */
+.event-box {
+  position: absolute;
+  border-radius: 8px;
+  padding: 0.2rem 0.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 0.78rem;
+  color: #0f172a;
+  width: min(calc(80px * 1.1), 110px); /* 96px~110px 사이 */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.05rem;
+  z-index: 1;
+}
+
+/* 다음 권장 교체 시점 카드 (점선 테두리) */
+.event-box-future {
+  border-style: dashed !important; /* 실선 규칙 덮어쓰기 */
+  opacity: 0.9;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+/* 점선 박스 안에는 다음 권장 km 한 줄만 */
+.event-next-only {
+  text-align: right;
+  font-weight: 600;
+}
+
+.event-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 긴 이름 ... 처리 */
+}
+
+.event-km,
+.event-next {
+  text-align: right;
+}
+
+.event-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  margin-top: 0.05rem;
+}
+
+/* 🔧 / 🗑 작은 정사각형 아이콘 버튼 */
+.event-actions button {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #d1d5db;
+  background: #e5e7eb;
+  border-radius: 4px;
+  padding: 0;
+  font-size: 0.9rem; /* 아이콘 조금 크게 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-actions button:hover {
+  background: #d1d5db;
+}
+
+/* 공통 row (텍스트 + 숫자) */
+.event-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.1rem;
+  font-size: 0.78rem;
+  line-height: 1.25rem;
+}
+
+/* 왼쪽 텍스트(교체 / 다음 / 권장) */
+.event-label {
+  font-weight: 600;
+  color: #374151;
+  text-align: left;
+  flex: 1;
+}
+
+/* 오른쪽 숫자 */
+.event-value {
+  flex: 1;
+  text-align: right;
+  color: #0f172a;
+}
+
+/* 넓은 버튼 영역 (좌우 끝까지) */
+.event-actions-wide {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}
+
+.event-actions-wide button {
+  flex: 1; /* 버튼 2개가 좌우 공간을 채움 */
+  padding: 0.25rem 0.1rem;
+  border: 1px solid #d1d5db;
+  background: #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.event-actions-wide button:hover {
+  background: #d1d5db;
+}
+
+/* ---------- Check 탭 테이블 ---------- */
+
+.panel {
+  background: #ffffff;
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+  overflow-x: auto; /* 가로 스크롤 */
+  white-space: nowrap; /* 줄바꿈 금지 */
+}
+
+.check-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  table-layout: auto;
+}
+
+.check-table th,
+.check-table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.35rem 0.7rem;
+  white-space: nowrap;
+}
+
+/* 1열: 소모품 목록 (왼쪽 정렬 + 넓게) */
+.check-table th:nth-child(1),
+.check-table td:nth-child(1) {
+  text-align: left;
+  min-width: 100px;
+}
+
+/* 2~4열: 숫자열(좁게 + 우측정렬) */
+.check-table th:nth-child(2),
+.check-table td:nth-child(2),
+.check-table th:nth-child(3),
+.check-table td:nth-child(3),
+.check-table th:nth-child(4),
+.check-table td:nth-child(4) {
+  text-align: right;
+  min-width: 100px;
+}
+
+/* 5열: 상태(넓게) */
+.check-table th:nth-child(5),
+.check-table td:nth-child(5) {
+  text-align: right;
+  min-width: 120px;
+}
+
+.status {
+  font-weight: 500;
+}
+
+.status.overdue {
+  color: #b91c1c;
+}
+
+.status.soon {
+  color: #b45309;
+}
+
+.status.ok {
+  color: #047857;
+}
+
+.check-tip {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.4rem;
+}
+
+/* ----------------------- */
+/*   다크 모드 전체 테마   */
+/* ----------------------- */
+body.dark {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* 기본 박스/카드들 – event-box는 제외 (borderColor 유지) */
+body.dark .app {
+  background: transparent;
+}
+
+body.dark .app-header,
+body.dark .top-list,
+body.dark .panel,
+body.dark .timeline-container {
+  background: #1f2937 !important;
+  color: #e5e8f0 !important;
+  border-color: #374151 !important;
+}
+
+/* 테이블 */
+body.dark .check-table th {
+  background: #374151 !important;
+  color: #e5e8f0;
+}
+
+body.dark .check-table td {
+  color: #e5e8f0;
+}
+
+/* 버튼류 */
+body.dark .reset-btn,
+body.dark .tab-btn,
+body.dark .icon-btn,
+body.dark .top-list-add,
+body.dark .event-actions-wide button,
+body.dark .darkmode-switch {
+  background: #374151 !important;
+  color: #e5e8f0 !important;
+  border-color: #4b5563 !important;
+}
+
+body.dark .reset-btn:hover,
+body.dark .tab-btn:hover,
+body.dark .icon-btn:hover,
+body.dark .top-list-add:hover,
+body.dark .event-actions-wide button:hover,
+body.dark .darkmode-switch:hover {
+  background: #4b5563 !important;
+}
+
+/* ============================================
+   🌙 야간 모드 전체 색상 (추가 세부 설정)
+   ============================================ */
+body.dark {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* 제목/텍스트 전체 흰색 */
+body.dark .app-title,
+body.dark .app-subtitle,
+body.dark label,
+body.dark span,
+body.dark p,
+body.dark h1,
+body.dark h2,
+body.dark h3 {
+  color: #f8fafc !important;
+}
+
+/* 상단 소모품 요약 박스 */
+body.dark .top-list {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.dark .top-list-row {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.dark .top-list-name,
+body.dark .top-list-text {
+  color: #ffffff !important;
+}
+
+/* 상단 수정/삭제 버튼 – 흰 테두리 */
+body.dark .top-list-actions .icon-btn {
+  border-color: #ffffff !important;
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+/* 타임라인 이벤트 카드 – borderColor는 인라인(style) 그대로 사용 */
+body.dark .event-box {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+body.dark .event-box-future {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.dark .event-label,
+body.dark .event-value,
+body.dark .event-name {
+  color: #ffffff !important;
+}
+
+/* 카드 안 수정/삭제 버튼 – 흰 테두리 */
+body.dark .event-actions-wide button {
+  border-color: #ffffff !important;
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+/* 라벨 · 축 텍스트도 밝게 */
+body.dark .axis-tick-label {
+  color: #e2e8f0 !important;
+  background: #0f172a !important;
+}
+
+body.dark .axis-current-label {
+  background: #7f1d1d !important;
+  color: #ffffff !important;
+}
+
+/* Check 페이지 패널/테이블 */
+body.dark .panel {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+body.dark .check-table th,
+body.dark .check-table td {
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+/* 상태 색상 – 흰색 대신 밝은 색으로 구분 */
+body.dark .status.ok {
+  color: #4ade80 !important; /* 밝은 녹색 */
+}
+
+body.dark .status.overdue {
+  color: #f87171 !important; /* 밝은 빨강 */
+}
+
+body.dark .status.soon {
+  color: #fb923c !important; /* 밝은 주황 */
+}
+
+/* ====================================================
+   🌙 DARK MODE — Timeline 전체 어두운 배경 적용
+   ==================================================== */
+
+/* 타임라인 전체 영역 */
+body.dark .timeline-container {
+  background: #0f172a !important;
+}
+
+/* 상단 가로 스크롤 바 */
+body.dark .timeline-scrollbar {
+  background: #1e293b !important;
+}
+
+body.dark .timeline-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569 !important;
+}
+
+/* 스크롤 가능한 타임라인 영역 */
+body.dark .timeline-wrapper {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  scrollbar-color: #475569 #1e293b !important;
+}
+
+/* 내부 실제 타임라인 */
+body.dark .timeline-main {
+  background: #0f172a !important;
+}
+
+/* grid 라인 색 (1000km 간격용 어두운 색) */
+body.dark .timeline-main {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #334155 0,
+    #334155 1px,
+    transparent 1px,
+    transparent 40px
+  ) !important;
+}
+
+/* 세로 축 배경도 어둡게 */
+body.dark .axis {
+  background: #0f172a !important;
+}
+
+/* 세로 축 눈금선 */
+body.dark .axis-tick-line.thin {
+  background: #475569 !important;
+}
+body.dark .axis-tick-line.medium {
+  background: #94a3b8 !important;
+}
+body.dark .axis-tick-line.strong {
+  background: #f1f5f9 !important;
+}
+
+/* 현재 주행거리 라인 */
+body.dark .axis-current-line {
+  background: #ef4444 !important;
+}
+
+body.dark .axis-current-label {
+  background: #7f1d1d !important;
+  color: #fff !important;
+}
