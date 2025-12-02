@@ -1,16 +1,249 @@
-# React + Vite
+# 🚗 NIRO Hev 자동차 소모품 관리
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+NIRO Hev 차량의 소모품 교체 이력과 다음 교체 시점을 **시각적 타임라인**으로 관리하는 개인용 웹 도구입니다.
 
-Currently, two official plugins are available:
+[![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📌 프로젝트 개요
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+엔진오일, 브레이크, 타이어 등 차량 소모품의 교체 주기를 잊지 않고 관리할 수 있도록 돕는 **순수 프론트엔드 애플리케이션**입니다.
 
-## Expanding the ESLint configuration
+### ✨ 주요 특징
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 📊 **세로 주행거리 타임라인** - 한눈에 보이는 교체 이력 시각화
+- 🎴 **소모품 요약 카드** - 각 소모품의 현황을 상단에 카드로 표시
+- 🌓 **주간/야간 모드** - 편안한 시인성을 위한 테마 전환
+- 💾 **자동 저장** - localStorage 기반, 새로고침 후에도 데이터 유지
+- ⚡ **즉시 실행** - React + Vite 기반 빠른 개발 환경
+- 🌐 **백엔드 불필요** - 브라우저만으로 완결된 앱
+
+---
+
+## 🏗️ 시스템 아키텍처
+
+```
+┌─────────────────────────────────────────────┐
+│         사용자 브라우저 (Browser)            │
+│                                             │
+│  ┌────────────────────────────────────────┐ │
+│  │   React + Vite SPA (Frontend Only)     │ │
+│  │                                        │ │
+│  │  ┌──────────────────────────────────┐  │ │
+│  │  │    상단: 소모품 요약 카드 영역     │  │ │
+│  │  │  [엔진오일] [브레이크] [타이어]    │  │ │
+│  │  └──────────────────────────────────┘  │ │
+│  │  ┌──────────────────────────────────┐  │ │
+│  │  │  하단: All 탭 - 타임라인 뷰        │ │ │
+│  │  │  세로축: 주행거리 (km)             │ │ │
+│  │  │  가로축: 소모품 종류별             │ │ │
+│  │  └──────────────────────────────────┘  │ │
+│  │  ┌──────────────────────────────────┐  │ │
+│  │  │  하단: Check 탭 - 점검 테이블      │ │ │
+│  │  │  소모품별 상태 & 잔여 거리         │  │ │
+│  │  └──────────────────────────────────┘  │ │
+│  └────────────────────────────────────────┘ │
+│                    ↕                        │
+│  ┌────────────────────────────────────────┐ │
+│  │         localStorage                   │ │
+│  │  - 소모품 정의                          │ │
+│  │  - 교체 이력                            │ │
+│  │  - 현재 주행거리                        │ │
+│  │  - 테마 설정                            │ │
+│  └────────────────────────────────────────┘ │
+└─────────────────────────────────────────────┘
+                     │
+                     ▼
+          ┌──────────────────┐
+          │  GitHub Pages    │
+          │  (배포 환경)      │
+          └──────────────────┘
+```
+
+---
+
+## 🎨 화면 구성
+
+### 1️⃣ 상단 헤더
+
+```
+┌──────────────────────────────────────────────────────┐
+│ 🌞/🌙 테마   [NIRO Hev 소모품 관리]     [초기화]      │
+│                                                      │
+│ 현재 주행거리: [182,265] km                           │
+│                                                      │
+│ 탭:  [ All ]    [ Check ]                            │
+└──────────────────────────────────────────────────────┘
+```
+
+- **테마 토글**: 주간/야간 모드 전환
+- **현재 주행거리 입력**: 타임라인의 기준점 설정
+- **탭 전환**: 타임라인 뷰 / 테이블 뷰 선택
+
+### 2️⃣ 소모품 요약 카드 (상단)
+
+```
+┌─────────────────────────────────────────────────┐
+│ 🔎 소모품 목록                       [+ 추가]    │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌──────────────┐  ┌──────────────┐             │
+│  │ 오일-엔진     │  │ 필터-에어컨  │  ...          │
+│  │ 권장: 8,000  │  │ 권장: 6,000  │              │
+│  │ 174,654      │  │ 174,654      │             │
+│  │  ↓           │  │  ↓           │             │
+│  │ 182,654      │  │ 180,654      │             │
+│  │ [수정][삭제]  │  │ [수정][삭제] │              │
+│  └──────────────┘  └──────────────┘             │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+- 각 소모품의 **권장 교체 주기**
+- **마지막 교체 시점** → **다음 교체 예정**
+- 카드 클릭 시 현재 주행거리로 교체 이력 추가
+
+### 3️⃣ All 탭 - 타임라인 시각화
+
+```
+    주행거리 (km)
+    ↑
+    │
+205,000  ┈┈┈┈ [오일-브레이크 다음 예정] ┈┈┈
+    │         ┊ (점선)
+    │         ┊
+182,000  ━━━━ [오일-엔진 교체] ━━━━━━━━━
+    │         │ (실선)
+    │         │
+174,000  ━━━━ [이전 교체] ━━━━━━━━━━━━━
+    │         │
+    │         │
+165,000  ━━━━ [더 이전 교체] ━━━━━━━━━━
+    │
+    └────────────────────────────────► 소모품 종류
+         엔진오일  브레이크  타이어  ...
+```
+
+- **세로축**: 주행거리 (1,000km 간격 그리드)
+- **가로축**: 소모품 종류별 열
+- **실선 박스**: 과거 교체 이력
+- **점선 박스**: 다음 권장 교체 시점
+- **빨간 가로선**: 현재 주행거리 위치
+
+### 4️⃣ Check 탭 - 점검 테이블
+
+| 소모품 | 권장 주기 | 마지막 교체 | 다음 교체 | 현재 상태 |
+|--------|----------|------------|----------|----------|
+| 오일-엔진 | 8,000 | 174,654 | 182,654 | 🟢 389 남음 |
+| 필터-에어컨 | 6,000 | 174,654 | 180,654 | 🔴 1,611 초과 |
+| 오일-브레이크 | 40,000 | 165,657 | 205,657 | 🟢 23,392 남음 |
+
+**상태 표시**
+- 🟢 **OK (남음)**: 밝은 녹색
+- 🟠 **곧 교체 (soon)**: 밝은 주황색
+- 🔴 **초과 (overdue)**: 밝은 붉은색
+
+---
+
+## 🌗 주간/야간 모드
+
+### 주간 모드 (Light)
+- 밝은 배경, 어두운 텍스트
+- 부드러운 파스텔 계열 카드
+
+### 야간 모드 (Dark)
+- 짙은 남색/다크블루 배경
+- 밝은 흰색 텍스트
+- 높은 대비의 상태 컬러
+
+헤더의 토글 스위치로 즉시 전환 가능하며, 설정은 localStorage에 자동 저장됩니다.
+
+---
+
+## 💾 데이터 관리
+
+### localStorage 저장 항목
+
+- ✅ 소모품 정의 (이름, 권장 주기)
+- ✅ 각 소모품의 교체 이력
+- ✅ 현재 주행거리
+- ✅ 마지막 선택한 소모품
+- ✅ 선택된 탭 (All / Check)
+- ✅ 테마 설정 (Light / Dark)
+
+### 데이터 초기화
+
+헤더의 **[초기화]** 버튼을 누르면:
+1. localStorage 전체 삭제
+2. 기본 소모품 목록으로 복원
+3. 현재 주행거리 0으로 초기화
+
+---
+
+## 🚀 실행 방법
+
+### 1. 저장소 클론
+
+```bash
+git clone https://github.com/your-username/niro-maintenance.git
+cd niro-maintenance
+```
+
+### 2. 의존성 설치
+
+```bash
+npm install
+```
+
+### 3. 로컬 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+브라우저에서 `http://localhost:5173` 접속
+
+### 4. 프로덕션 빌드
+
+```bash
+npm run build
+```
+
+### 5. GitHub Pages 배포
+
+```bash
+npm run deploy
+```
+
+---
+
+## 🎓 학습 포인트
+
+- ✅ React Hooks 활용 (useState, useEffect)
+- ✅ localStorage를 통한 클라이언트 데이터 관리
+- ✅ Vite 기반 빠른 개발 환경 구축
+- ✅ CSS를 활용한 타임라인 시각화
+- ✅ 테마 전환 시스템 구현
+- ✅ 순수 프론트엔드 SPA 설계
+
+---
+
+## 📝 주요 기능 흐름
+
+```
+1. 사용자가 현재 주행거리 입력 (예: 182,265 km)
+        ↓
+2. 타임라인에 빨간 가로선이 해당 위치에 표시
+        ↓
+3. 소모품 카드 클릭 → 현재 주행거리로 교체 이력 추가
+        ↓
+4. localStorage에 자동 저장
+        ↓
+5. All 탭: 타임라인에서 교체 이력 시각화
+   Check 탭: 테이블로 잔여/초과 거리 확인
+        ↓
+6. 페이지 새로고침 → localStorage에서 데이터 복원
+```
+---
