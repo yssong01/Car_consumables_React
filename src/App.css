@@ -1,15 +1,32 @@
 /* src/App.css */
 
+/* 기본 뼈대 */
+
 html,
-body,
-#root {
+body {
+  width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-/* 바깥쪽(브라우저)에는 스크롤바가 생기지 않게 */
+/* 전체 페이지에 항상 세로 스크롤 가능하게 (PC 에서는 바가 항상 보임) */
 body {
-  margin: 0;
-  overflow: auto;
+  overflow-y: scroll;   /* auto 대신 scroll 사용 → PC 에서 항상 스크롤바 */
+  overflow-x: auto;
+}
+
+/* React 루트도 전체 화면에 맞추기 */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* 최상위 컴포넌트(예: .car-app) */
+.car-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .app {
@@ -913,4 +930,107 @@ body.dark .axis-current-line {
 body.dark .axis-current-label {
   background: #7f1d1d !important;
   color: #fff !important;
+}
+
+
+
+/* 상단/하단을 감싸는 레이아웃 */
+.main-layout {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 소모품 카드 리스트 영역 – 세로 스크롤 */
+.card-list-wrapper {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* 하단 그래프/리스트 영역 – 가로/세로 모두 스크롤 가능 */
+.bottom-panel {
+  flex: 0 0 auto;
+  max-height: 280px;        /* 필요시 조정 */
+  overflow: auto;           /* 가로·세로 스크롤 둘 다 */
+  white-space: nowrap;      /* 내부 내용이 가로로 길면 가로 스크롤 생김 */
+}
+
+/* PC에서 스크롤 바 스타일(선택 사항) */
+.bottom-panel::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.bottom-panel::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+/* 왼쪽(제목) 영역은 기본 */
+.header-left h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* 오른쪽 버튼 묶음 */
+.header-right {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 버튼 줄바꿈 금지 + 오른쪽 정렬 */
+.header-buttons {
+  display: flex;
+  flex-wrap: nowrap;     /* 줄바꿈 방지 포인트 */
+  gap: 0.4rem;
+  white-space: nowrap;   /* 텍스트 줄바꿈 방지 */
+}
+
+/* 버튼 디자인은 기존 스타일 유지, 여기는 예시 */
+.header-buttons button {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.9rem;
+}
+
+/* 주/야간 버튼 예시만 따로 */
+.header-buttons .mode-btn {
+  /* 기존 스타일 그대로 옮기면 됨 */
+}
+
+
+/* 가로 600px 이하: 버튼/폰트 축소 + 오른쪽 상단 고정 느낌 */
+@media (max-width: 600px) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .header-left h1 {
+    font-size: 1rem;
+  }
+
+  .header-buttons {
+    gap: 0.25rem;
+    transform: scale(0.9);        /* 전체 사이즈 90%로 축소 */
+    transform-origin: top right;  /* 오른쪽 위 기준으로 줄어들게 */
+  }
+
+  .header-buttons button {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }
