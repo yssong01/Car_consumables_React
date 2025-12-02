@@ -2,6 +2,8 @@
 
 차량의 소모품 교체 이력과 다음 교체 시점을 **시각적 타임라인**으로 관리하는 개인용 웹 도구입니다.
 
+ver1.1은 프로토타입으로 PC에서 구동 환경이 최적화되었습니다. (모바일에서는 사용이 어려움)
+
 [![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 
