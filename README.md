@@ -1,6 +1,6 @@
-# 🚗 NIRO Hev 자동차 소모품 관리 ver1.1
+# 🚗 자동차 소모품 관리 ver1.1
 
-NIRO Hev 차량의 소모품 교체 이력과 다음 교체 시점을 **시각적 타임라인**으로 관리하는 개인용 웹 도구입니다.
+차량의 소모품 교체 이력과 다음 교체 시점을 **시각적 타임라인**으로 관리하는 개인용 웹 도구입니다.
 
 [![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
