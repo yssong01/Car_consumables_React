@@ -246,4 +246,14 @@ npm run deploy
         ↓
 6. 페이지 새로고침 → localStorage에서 데이터 복원
 ```
+
+---
+
+## 👨‍💻 개발자
+
+**yssong01**
+
+- 💻 GitHub: [https://github.com/yssong01](https://github.com/yssong01)
+- 📝 Tistory: [https://memo1286.tistory.com/](https://memo1286.tistory.com/)
+
 ---
