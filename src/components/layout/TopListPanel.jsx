@@ -17,8 +17,7 @@ export default function TopListPanel({
     <div className="top-list">
       <div className="top-list-header">
         <div className="top-list-title">
-          🔎 소모품 : 권장 교체 주기 [km] / 마지막 교체 시점 → 다음 권장 교체
-          시점
+          🔎 소모품 : 권장 교체 주기 / 마지막 시점 → 다음 시점
         </div>
         <button
           type="button"

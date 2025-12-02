@@ -314,6 +314,12 @@ function App() {
   // -------------------------------
   // render
   // -------------------------------
+// src/App.jsx
+// ...중간 생략...
+
+  // -------------------------------
+  // render
+  // -------------------------------
   return (
     <div className="app">
       <header className="app-header">
@@ -321,7 +327,7 @@ function App() {
         <div className="app-header-top">
           <div className="app-header-left">
             <div className="app-title-row">
-              <h1 className="app-title">NIRO Hev 자동차 소모품 관리</h1>
+              <h1 className="app-title">자동차 소모품 관리</h1>
               <button
                 type="button"
                 className="darkmode-switch"
@@ -330,9 +336,6 @@ function App() {
                 {darkMode ? "🌙 야간" : "🌞 주간"}
               </button>
             </div>
-            <p className="app-subtitle">
-              🛂 주행 거리 입력 후, 소모품 항목 선택
-            </p>
           </div>
 
           {/* 🔹 가장 우측 상단 초기화 버튼 */}
@@ -345,7 +348,15 @@ function App() {
           </button>
         </div>
 
-        {/* 두 번째 줄: 현재 주행거리 + 최근 교체 + All/Check 탭 */}
+        {/* 🔹 두 번째 줄: 자막 + All / Check 탭 */}
+        <div className="subtitle-row">
+          <p className="app-subtitle">🛂 주행 거리 입력 후, 소모품 항목 선택</p>
+
+          {/* 오른쪽: All / Check 탭 */}
+          <Tabs activeTab={activeTab} onChange={setActiveTab} />
+        </div>
+
+        {/* 세 번째 줄: 현재 주행거리 + 최근 교체 */}
         <div className="current-row">
           <label htmlFor="current-km">🛃 현재 주행거리 [km]</label>
           <input
@@ -360,12 +371,9 @@ function App() {
             최근 교체 시점:{" "}
             {latestKm != null ? `${latestKm.toLocaleString()} km` : "-"}
           </span>
-
-          {/* 오른쪽: All / Check 탭 */}
-          <Tabs activeTab={activeTab} onChange={setActiveTab} />
         </div>
 
-        {/* 세 번째 줄: 상단 소모품 리스트 */}
+        {/* 네 번째 줄: 상단 소모품 리스트 */}
         <div className="app-header-right">
           <TopListPanel
             consumables={consumables}
@@ -402,3 +410,4 @@ function App() {
 }
 
 export default App;
+

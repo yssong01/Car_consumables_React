@@ -1,6 +1,4 @@
-/* src/App.css */
-
-/* 기본 뼈대 */
+/* ===== 전체 뼈대 + 스크롤 ===== */
 
 html,
 body {
@@ -10,34 +8,26 @@ body {
   padding: 0;
 }
 
-/* 전체 페이지에 항상 세로 스크롤 가능하게 (PC 에서는 바가 항상 보임) */
+/* PC / 모바일 공통: 항상 세로 스크롤 가능 */
 body {
-  overflow-y: scroll;   /* auto 대신 scroll 사용 → PC 에서 항상 스크롤바 */
-  overflow-x: auto;
+  margin: 0;
+  overflow-y: auto; /* 내용이 넘치면 세로 스크롤 */
+  overflow-x: hidden; /* 가로 스크롤은 내부 요소에서만 */
 }
 
-/* React 루트도 전체 화면에 맞추기 */
 #root {
-  width: 100%;
   min-height: 100vh;
 }
 
-/* 최상위 컴포넌트(예: .car-app) */
-.car-app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
+/* 앱 전체 래퍼 */
 .app {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1rem;
 
-  /* 여기부터 변경 */
-  height: 100%; /* 부모(#root)의 100% = 화면 전체 높이 */
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* 위에 헤더, 아래에 타임라인이 세로로 */
+  flex-direction: column;
 }
 
 /* ---------- 상단 헤더 ---------- */
@@ -120,11 +110,6 @@ body {
   background: #e5e7eb;
 }
 
-/* 기존: .current-row .tab-bar { margin-left: auto; } 는 이제 필요 없음 */
-.current-row .tab-bar {
-  margin-left: auto;
-}
-
 .current-row label {
   white-space: nowrap;
 }
@@ -143,10 +128,6 @@ body {
   color: #4b5563;
   white-space: nowrap;
   margin-left: 0.2rem;
-}
-
-.current-row .tab-bar {
-  margin-left: auto;
 }
 
 /* 탭 버튼 바 */
@@ -188,6 +169,8 @@ body {
 
 /* ---------- 상단 소모품 요약 ---------- */
 
+/* ---------- 상단 헤더 ---------- */
+
 .app-header {
   display: flex;
   flex-direction: column;
@@ -200,6 +183,8 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* 화면이 좁을 때 자연스럽게 줄바꿈 */
 }
 
 .app-header-right {
@@ -246,11 +231,72 @@ body {
   background: #1d4ed8;
 }
 
-.top-list-body {
+/* .top-list-body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.25rem;
+} */
+
+/* ===== 상단 소모품 상자 레이아웃 ===== */
+
+/* 기본: 태블릿~PC 기준 – 220px 이상 칸을 가능한 많이 배치 (3~4열 이상) */
+.top-list-body {
+  display: grid;
+  gap: 0.35rem;
+  align-items: stretch;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
+
+/* 개별 카드 – 레이아웃 관련 부분만 추가 */
+.top-list-row {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.05rem;
+  cursor: pointer;
+  text-align: left;
+  min-height: 3rem;
+  position: relative;
+
+  /* 🔑 grid 셀 안에서 유연하게 줄어들도록 */
+  min-width: 0;
+}
+
+/* 📱 아주 좁은 모바일: 1열(화면 폭 꽉 채우기) */
+/* @media (max-width: 480px) {
+  .top-list-body {
+    grid-template-columns: 1fr;
+  }
+} */
+
+/* 폭이 매우 좁은 모바일에서 줄바꿈 처리 */
+@media (max-width: 480px) {
+  .subtitle-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .subtitle-row .tab-bar {
+    margin-left: 0;
+    align-self: flex-end; /* 자막 아래 오른쪽으로 배치 */
+  }
+}
+
+/* 📱/📟 작은 태블릿: 2열 고정 */
+@media (min-width: 481px) and (max-width: 900px) {
+  .top-list-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 💻 900px 이상(PC): 위의 기본값 유지
+   → 한 줄에 3, 4, 5열까지 화면 여백을 채우며 자동 재배열 */
 
 .top-list-row {
   font-size: 0.8rem;
@@ -268,17 +314,14 @@ body {
   position: relative;
 
   /* 🔹 부드러운 애니메이션 (주간/야간 공통) */
-  transition:
-    transform 0.18s ease-out,
-    box-shadow 0.18s ease-out,
-    background-color 0.18s ease-out,
-    border-color 0.18s ease-out;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out,
+    background-color 0.18s ease-out, border-color 0.18s ease-out;
 }
 
 /* ☀️ 주간 모드에서의 hover */
 .top-list-row:hover {
-  border-color: #2563eb;                /* 파란색 강조 */
-  background: #e5efff;                  /* 약간 푸른 톤의 밝은 배경 */
+  border-color: #2563eb; /* 파란색 강조 */
+  background: #e5efff; /* 약간 푸른 톤의 밝은 배경 */
   box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
   transform: translateY(-2px) scale(1.03);
 }
@@ -932,105 +975,21 @@ body.dark .axis-current-label {
   color: #fff !important;
 }
 
-
-
-/* 상단/하단을 감싸는 레이아웃 */
-.main-layout {
-  flex: 1 1 auto;
+/* 🔹 자막 + All / Check 한 줄 정렬 */
+.subtitle-row {
   display: flex;
-  flex-direction: column;
-}
-
-/* 소모품 카드 리스트 영역 – 세로 스크롤 */
-.card-list-wrapper {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* 하단 그래프/리스트 영역 – 가로/세로 모두 스크롤 가능 */
-.bottom-panel {
-  flex: 0 0 auto;
-  max-height: 280px;        /* 필요시 조정 */
-  overflow: auto;           /* 가로·세로 스크롤 둘 다 */
-  white-space: nowrap;      /* 내부 내용이 가로로 길면 가로 스크롤 생김 */
-}
-
-/* PC에서 스크롤 바 스타일(선택 사항) */
-.bottom-panel::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.bottom-panel::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
-}
-
-
-
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.8rem;
 }
 
-/* 왼쪽(제목) 영역은 기본 */
-.header-left h1 {
-  margin: 0;
-  font-size: 1.2rem;
+/* 자막 텍스트는 왼쪽 영역 전체 사용 */
+.subtitle-row .app-subtitle {
+  flex: 1 1 auto;
+  margin: 0; /* 위·아래 여백 제거 */
 }
 
-/* 오른쪽 버튼 묶음 */
-.header-right {
-  display: flex;
-  align-items: flex-start;
-}
-
-/* 버튼 줄바꿈 금지 + 오른쪽 정렬 */
-.header-buttons {
-  display: flex;
-  flex-wrap: nowrap;     /* 줄바꿈 방지 포인트 */
-  gap: 0.4rem;
-  white-space: nowrap;   /* 텍스트 줄바꿈 방지 */
-}
-
-/* 버튼 디자인은 기존 스타일 유지, 여기는 예시 */
-.header-buttons button {
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  border: none;
-  font-size: 0.9rem;
-}
-
-/* 주/야간 버튼 예시만 따로 */
-.header-buttons .mode-btn {
-  /* 기존 스타일 그대로 옮기면 됨 */
-}
-
-
-/* 가로 600px 이하: 버튼/폰트 축소 + 오른쪽 상단 고정 느낌 */
-@media (max-width: 600px) {
-  .header {
-    align-items: flex-start;
-  }
-
-  .header-left h1 {
-    font-size: 1rem;
-  }
-
-  .header-buttons {
-    gap: 0.25rem;
-    transform: scale(0.9);        /* 전체 사이즈 90%로 축소 */
-    transform-origin: top right;  /* 오른쪽 위 기준으로 줄어들게 */
-  }
-
-  .header-buttons button {
-    padding: 0.2rem 0.5rem;
-    font-size: 0.8rem;
-  }
+/* Tabs 컴포넌트에서 감싸는 .tab-bar 가 subtitle-row 안에 들어오므로
+   오른쪽 정렬이 되도록 처리 */
+.subtitle-row .tab-bar {
+  margin-left: auto;
 }
